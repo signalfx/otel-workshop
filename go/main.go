@@ -6,8 +6,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"time"
-
-	"go.opentelemetry.io/otel/plugin/httptrace"
 )
 
 func main() {
@@ -49,9 +47,6 @@ func (s *server) fetchFromPythonService(ctx context.Context) ([]byte, error) {
 	if err != nil {
 		return body, err
 	}
-
-	ctx, req = httptrace.W3C(ctx, req)
-	httptrace.Inject(ctx, req)
 
 	res, err := client.Do(req)
 	if err != nil {
