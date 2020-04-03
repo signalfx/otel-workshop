@@ -2,7 +2,7 @@
 
 .PHONY: run 
 run:
-	venv/bin/python main.py
+	python3 main.py
 
 
 .PHONY: install 
