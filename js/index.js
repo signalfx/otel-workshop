@@ -1,5 +1,3 @@
-const tracer = require('./tracer')('node-service');
-
 const express = require('express');
 const axios = require('axios').default;
 
@@ -10,9 +8,13 @@ const PORT = 8081;
 app.use(express.json());
 
 app.get('/', async (req, res) => {
-  // const response = await axios.get(`http://localhost:8083/`)
-  response = ""
-  res.status(201).send("hello from node\n" + response)
+  axios.get('http://localhost:8083')
+  .then(response => {
+    res.status(201).send("hello from node\n" + response)
+  })
+  .catch(err => {
+    res.status(201).send("hello from node\n" + "error fetching from java")
+  }) 
 });
 
 app.listen(PORT);
