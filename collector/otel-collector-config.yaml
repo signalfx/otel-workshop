@@ -14,6 +14,9 @@ receivers:
             action: drop
   zipkin:
     endpoint: 0.0.0.0:9411
+  otlp:
+    endpoint: "0.0.0.0:55680"
+  opencensus: {}
 
 exporters:
   #jaeger:
@@ -43,7 +46,7 @@ service:
   extensions: [pprof, zpages, health_check]
   pipelines:
     traces:
-      receivers: [zipkin]
+      receivers: [zipkin, opencensus, otlp]
       exporters: [logging]
       processors: [batch, queued_retry]
     metrics:
