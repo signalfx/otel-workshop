@@ -8,9 +8,20 @@ https://github.com/open-telemetry/opentelemetry-java/tree/master/examples/http
 
 
 ## Running the application
-TODO
+The application is available at https://glitch.com/edit/#!/signalfx-otel-workshop-java. By default, it runs an
+uninstrumented version of the application. From the Glitch site, you should select the name of the Glitch project
+(top left) and select `Remix Project`. You will now have a new Glitch project. The name of the project is listed in the
+top left of the window.
 
-## Add the relevant dependencies and repositories to pom.xml
+TODO - Add instructions to run this locally.
+
+## Instrumenting Python HTTP server and client with OpenTelemetry
+
+Your task is to instrument this application using [OpenTelemetry
+Python](https://github.com/open-telemetry/opentelemetry-java). If you get
+stuck, check out the `app_instrumented` directory.
+
+### 1. Add the relevant dependencies and repositories to pom.xml
 
 ```diff
   <!-- library dependencies -->
@@ -34,7 +45,7 @@ TODO
 +  </repositories>
 ```
 
-## Import the packages required for instrumenting your Java app
+## 2. Import the packages required for instrumenting your app
 
 ```diff
 +import io.opentelemetry.OpenTelemetry;
@@ -50,7 +61,13 @@ TODO
 
 ```
 
-## Initiate the tracer, the logging exporter and invoke it during the Main class initializer.
+Note: The recommended deployment model for OpenTelemetry is to have applications export in OpenTelemetry (OTLP) format
+to the OpenTelemetry Collector and have the OpenTelemetry Collector send to your back-end(s) of choice. OTLP uses gRPC
+and unfortunately it does not appear Glitch supports gRPC. For this workshop, all other languages are exporting in
+Zipkin and it isn't supported in Java yet. All traces emitted by this application will be logged instead of forwarded
+to the OpenTelemetry Collector.
+
+## 3. Initiate the tracer, the logging exporter and invoke it during the Main class initializer.
 
 ```diff
 
@@ -76,7 +93,7 @@ private Main(int port) throws IOException {
 
 ```
 
-## Instrument the HTTP Handler
+## 4. Manually instrument the HTTP Handler
 
 ```diff
     @Override
@@ -101,3 +118,5 @@ private Main(int port) throws IOException {
 +      span.end();
     }
 ```
+
+This will generate spans with the attriibutes `http.url` and `response`.
